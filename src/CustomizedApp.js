@@ -44,7 +44,7 @@ function CustomizedApp({userId, appId, sb}) {
             renderSettingsBar();
           }}
           renderMessageInput={() => (
-            <CustomizedMessageInput appId={appId}/>
+            <CustomizedMessageInput appId={appId} />
           )}
         />
       </div>

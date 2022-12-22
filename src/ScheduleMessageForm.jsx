@@ -2,13 +2,14 @@ import React from "react";
 import "./schedule-message-form.css";
 import CalendarDatePicker from "./CalendarDatePicker";
 
-export default function ScheduleMessageForm({ scheduleMessage, setShowForm }) {
+export default function ScheduleMessageForm({ setDateTimeSelected, scheduleMessage, setShowScheduleMessageForm, onClose }) {
+
   return (
     <div className="bg-modal" style={{ display: "flex" }}>
       <div className="modal-content">
         <div
           className="add_suggested_task_close_btn"
-          onClick={() => setShowForm(false)}
+          onClick={() => setShowScheduleMessageForm(false)}
         >
           +
         </div>
@@ -19,7 +20,9 @@ export default function ScheduleMessageForm({ scheduleMessage, setShowForm }) {
             scheduleMessage(e);
           }}
         >
-          <CalendarDatePicker />
+          <CalendarDatePicker 
+           setDateTimeSelected={setDateTimeSelected}
+           />
           <button id="add_suggested_task_save_btn">Submit</button>
         </form>
       </div>

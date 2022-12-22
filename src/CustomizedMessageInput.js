@@ -6,13 +6,16 @@ import {
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import useSendbirdStateContext from "@sendbird/uikit-react/useSendbirdStateContext";
 import sendbirdSelectors from "@sendbird/uikit-react/sendbirdSelectors";
 import { useChannelContext } from "@sendbird/uikit-react/Channel/context";
 import ScheduleMessageForm from "./ScheduleMessageForm";
+import ScheduleMessageList from "./ScheduleMessageList";
 import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
+import dayjs from "dayjs";
 
 function CustomizedMessageInput({ appId }) {
   const store = useSendbirdStateContext();
@@ -21,16 +24,20 @@ function CustomizedMessageInput({ appId }) {
   const channelStore = useChannelContext();
   const channel = channelStore?.currentGroupChannel;
   const disabled = channelStore?.disabled;
-
   const [inputText, setInputText] = useState("");
-  const [formText, setFormText] = useState("");
-  const [showScheduleMessage, setShowScheduleMessage] = useState(false);
+  const [showScheduleMessageForm, setShowScheduleMessageForm] = useState(false);
+  const [showScheduleMessageList, setShowScheduleMessageList] = useState(false);
   const isInputEmpty = inputText.length < 1;
+  var today = new Date();
+  const [dateTimeSelected, setDateTimeSelected] = React.useState(
+    dayjs(`${today}`)
+  );
 
   const handleChange = (event) => {
+    //Do we want to trigger scheduled messaging from input bar?
     if (event?.target?.value?.startsWith(`/schedule `)) {
       setInputText("");
-      setShowScheduleMessage(true);
+      setShowScheduleMessageForm(true);
     } else {
       setInputText(event.target.value);
     }
@@ -57,67 +64,62 @@ function CustomizedMessageInput({ appId }) {
   };
 
   const scheduleMessage = (e) => {
-    console.log("Clicked submit for schedule message");
     e.preventDefault();
-    //the text that was used in input = inputText 
-
-    // setShowScheduleMessage(false);
-
-
-
-    // let options = []
-    // const params = {
-    //   title: formText,
-    //   optionTexts: options,
-    // };
-    // const myPoll = await sb.poll.create(params);
-    // const userMessageParams = {};
-    // userMessageParams.message = myPoll.title;
-    // userMessageParams.pollId = myPoll.id;
-    // sendUserMessage(channel, userMessageParams)
-    //   .onSucceeded((message) => {
-    //     console.log("Message=", message);
-    //     console.log("Poll created in message sent=", myPoll);
-    //     setInputText("");
-    //   })
-    //   .onFailed((error) => {
-    //     console.log(error.message);
-    //   });
-    // setFormText("");
-    // setShowTaskForm(false);
+    let unixTimestamp = dateTimeSelected.$d.getTime();
+    const params = {
+      message: inputText,
+      scheduledAt: unixTimestamp,
+    };
+    channel
+      .createScheduledUserMessage(params)
+      .onSucceeded((message) => {
+        console.log("Create scheduled message successful");
+      })
+      .onFailed((err, message) => {
+        console.log("Create scheduled message error:", err);
+      });
+    setInputText("");
+    setShowScheduleMessageForm(false);
   };
 
   const checkSendUserMessage_ = (event) => {
-    if (showScheduleMessage) {
+    if (showScheduleMessageForm) {
       scheduleMessage();
     } else {
-    const params = {};
-    params.message = inputText;
-    sendUserMessage(channel, params)
-      .onSucceeded((message) => {
-        console.log(message);
-        setInputText("");
-      })
-      .onFailed((error) => {
-        console.log(error.message);
-      });
-
-     }
+      const params = {};
+      params.message = inputText;
+      sendUserMessage(channel, params)
+        .onSucceeded((message) => {
+          console.log(message);
+          setInputText("");
+        })
+        .onFailed((error) => {
+          console.log(error.message);
+        });
+    }
   };
   return (
     <div className="customized-message-input">
-      {showScheduleMessage && (
+      {showScheduleMessageForm && (
         <ScheduleMessageForm
-        
-          messageText={formText}
-          changeMessageText={setFormText}
+          setDateTimeSelected={setDateTimeSelected}
           scheduleMessage={scheduleMessage}
-          setShowForm={setShowScheduleMessage}
+          setShowScheduleMessageForm={setShowScheduleMessageForm}
           onClose={() => {
-            setShowScheduleMessage(false);
+            setShowScheduleMessageForm(false);
           }}
         />
       )}
+
+      {showScheduleMessageList && (
+        <ScheduleMessageList
+          setShowScheduleMessageList={setShowScheduleMessageList}
+          onClose={() => {
+            setShowScheduleMessageList(false);
+          }}
+        />
+      )}
+
       <FormControl variant="outlined" disabled={disabled} fullWidth>
         <InputLabel htmlFor="customized-message-input">User Message</InputLabel>
         <OutlinedInput
@@ -153,14 +155,13 @@ function CustomizedMessageInput({ appId }) {
                         color={disabled ? "disabled" : "primary"}
                       />
                     </IconButton>
+                    <IconButton
+                      disabled={disabled}
+                      onClick={() => setShowScheduleMessageList(true)}
+                    >
+                      <AccessTimeIcon color={"primary"} />
+                    </IconButton>
                   </label>
-
-                  <IconButton
-                    disabled={disabled}
-                    onClick={() => setShowScheduleMessage(true)}
-                  >
-                    <ScheduleSendIcon color={"primary"} />
-                  </IconButton>
                 </div>
               ) : (
                 <div>
@@ -169,6 +170,12 @@ function CustomizedMessageInput({ appId }) {
                     onClick={checkSendUserMessage_}
                   >
                     <SendIcon color={disabled ? "disabled" : "primary"} />
+                  </IconButton>
+                  <IconButton
+                    disabled={disabled}
+                    onClick={() => setShowScheduleMessageForm(true)}
+                  >
+                    <ScheduleSendIcon color={"primary"} />
                   </IconButton>
                 </div>
               )}
