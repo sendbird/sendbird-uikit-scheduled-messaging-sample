@@ -2,6 +2,7 @@ import React from "react";
 import "./schedule-message-form.css";
 
 export default function ScheduleMessageList({
+  scheduledMessagesCount,
   updateScheduledMessage,
   scheduledMessagesList,
   setShowScheduleMessageList,
@@ -16,7 +17,8 @@ export default function ScheduleMessageList({
         >
           +
         </div>
-        <h1 className="scheduled-messages-list-title">List of scheduled messages:</h1>
+        <h2 className="scheduled-messages-list-count">Total scheduled messages: {scheduledMessagesCount}</h2>
+        <h2 className="scheduled-messages-list-title">List of scheduled messages:</h2>
         <div className="scheduled-messages-container">
           <ul className="scheduled-messages-list">
             {scheduledMessagesList.map((scheduledMessage) => (

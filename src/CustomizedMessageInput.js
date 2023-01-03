@@ -29,6 +29,7 @@ function CustomizedMessageInput({ appId, sb }) {
   const [showScheduleMessageForm, setShowScheduleMessageForm] = useState(false);
   const [showScheduleMessageList, setShowScheduleMessageList] = useState(false);
   const [scheduledMessagesList, setScheduledMessagesList] = useState([]);
+  const [scheduledMessagesCount, setScheduledMessagesCount] = useState(0);
   const [messageToUpdate, setMessageToUpdate] = useState(null);
   const isInputEmpty = inputText.length < 1;
   var today = new Date();
@@ -54,13 +55,7 @@ function CustomizedMessageInput({ appId, sb }) {
   };
 
   const handleChange = (event) => {
-    //Do we want to trigger scheduled messaging from input bar?
-    // if (event?.target?.value?.startsWith(`/schedule `)) {
-    //   setInputText("");
-    //   setShowScheduleMessageForm(true);
-    // } else {
     setInputText(event.target.value);
-    //  }
   };
 
   const sendFileMessage_ = (event) => {
@@ -86,8 +81,6 @@ function CustomizedMessageInput({ appId, sb }) {
   async function scheduleMessage(e) {
     e.preventDefault();
     let unixTimestamp = dateTimeSelected.$d.getTime();
-    console.log("input text=", inputText);
-    console.log("dateTimeSelected=", unixTimestamp);
     if (messageToUpdate) {
       let params;
       if (unixTimestamp) {
@@ -101,7 +94,6 @@ function CustomizedMessageInput({ appId, sb }) {
           message: inputText,
         };
       }
-      console.log("in messageToUpdate; params after=", params);
       await channel.updateScheduledUserMessage(
         messageToUpdate.scheduledInfo.scheduledMessageId,
         params
@@ -126,7 +118,6 @@ function CustomizedMessageInput({ appId, sb }) {
   }
 
   async function loadScheduledMessages() {
-    console.log("1. in loadScheduledMessages");
     setShowScheduleMessageList(true);
     const params = {
       channelUrl: channel.url,
@@ -135,9 +126,12 @@ function CustomizedMessageInput({ appId, sb }) {
     const scheduledMessageListQuery =
       sb.groupChannel.createScheduledMessageListQuery(params);
     const queriedScheduledMessages = await scheduledMessageListQuery.next();
-
-    console.log("scheduled messages=", queriedScheduledMessages);
     setScheduledMessagesList(queriedScheduledMessages);
+    const countParams = {
+      scheduledStatus: [ScheduledStatus.PENDING],
+    };
+    const totalScheduledMessageCount = await sb.groupChannel.getTotalScheduledMessageCount(countParams);
+    setScheduledMessagesCount(totalScheduledMessageCount)
   }
 
   async function updateScheduledMessage(e, selectedMessage) {
@@ -171,6 +165,7 @@ function CustomizedMessageInput({ appId, sb }) {
       )}
       {showScheduleMessageList && (
         <ScheduleMessageList
+          scheduledMessagesCount={scheduledMessagesCount}
           updateScheduledMessage={updateScheduledMessage}
           scheduledMessagesList={scheduledMessagesList}
           setShowScheduleMessageList={setShowScheduleMessageList}
