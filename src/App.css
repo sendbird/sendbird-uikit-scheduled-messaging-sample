@@ -205,15 +205,18 @@ li {
   display: none;
   justify-content: center;
   align-items: center;
+
 }
 
 .modal-content {
-  width: 300px;
-  height: 250px;
+  width: 30%;
+  height: 50%;
   background-color: white;
   border-radius: 4px;
   padding: 20px;
   position: absolute;
+  overflow-x:hidden; 
+  overflow-y:auto; 
 }
 
 #suggestion-task-form-title {
