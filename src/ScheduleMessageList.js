@@ -2,13 +2,10 @@ import React from "react";
 import "./schedule-message-form.css";
 
 export default function ScheduleMessageList({
-  changeScheduledMessageText,
-  changeScheduledMessageTime,
-  setShowScheduleMessageForm,
   updateScheduledMessage,
   scheduledMessagesList,
   setShowScheduleMessageList,
-  // onClose,
+  cancelScheduledMessage
 }) {
   return (
     <div className="bg-modal" style={{ display: "flex" }}>
@@ -23,13 +20,21 @@ export default function ScheduleMessageList({
         <div className="scheduled-messages-wrap">
           <ul>
             {scheduledMessagesList.map((scheduledMessage) => (
-              <div className="scheduled-message" key={scheduledMessage.scheduledInfo.scheduledMessageId}>
-              <li >
-                {scheduledMessage.message}
-              </li>
-              <button onClick={(e)=>changeScheduledMessageText(e,scheduledMessage)}>Change Message</button>
-              <button onClick={(e)=>changeScheduledMessageTime(e,scheduledMessage)}>Change time</button>
-              <button>Cancel</button>
+              <div
+                className="scheduled-message"
+                key={scheduledMessage.scheduledInfo.scheduledMessageId}
+              >
+                <li>{scheduledMessage.message}</li>
+                <button
+                  onClick={(e) => updateScheduledMessage(e, scheduledMessage)}
+                >
+                  Update
+                </button>
+                <button
+                  onClick={() => cancelScheduledMessage(scheduledMessage)}
+                >
+                  Cancel
+                </button>
               </div>
             ))}
           </ul>

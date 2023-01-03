@@ -16,7 +16,7 @@ import ScheduleMessageForm from "./ScheduleMessageForm";
 import ScheduleMessageList from "./ScheduleMessageList";
 import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
 import dayjs from "dayjs";
-import ScheduledStatus from "@sendbird/chat/groupChannel";
+import { ScheduledStatus } from "@sendbird/chat/groupChannel";
 
 function CustomizedMessageInput({ appId, sb }) {
   const store = useSendbirdStateContext();
@@ -29,7 +29,7 @@ function CustomizedMessageInput({ appId, sb }) {
   const [showScheduleMessageForm, setShowScheduleMessageForm] = useState(false);
   const [showScheduleMessageList, setShowScheduleMessageList] = useState(false);
   const [scheduledMessagesList, setScheduledMessagesList] = useState([]);
-  const [messageToUpdate, setmessageToUpdate] = useState(null);
+  const [messageToUpdate, setMessageToUpdate] = useState(null);
   const isInputEmpty = inputText.length < 1;
   var today = new Date();
   const [dateTimeSelected, setDateTimeSelected] = React.useState(
@@ -55,12 +55,12 @@ function CustomizedMessageInput({ appId, sb }) {
 
   const handleChange = (event) => {
     //Do we want to trigger scheduled messaging from input bar?
-    if (event?.target?.value?.startsWith(`/schedule `)) {
-      setInputText("");
-      setShowScheduleMessageForm(true);
-    } else {
-      setInputText(event.target.value);
-    }
+    // if (event?.target?.value?.startsWith(`/schedule `)) {
+    //   setInputText("");
+    //   setShowScheduleMessageForm(true);
+    // } else {
+    setInputText(event.target.value);
+    //  }
   };
 
   const sendFileMessage_ = (event) => {
@@ -86,11 +86,22 @@ function CustomizedMessageInput({ appId, sb }) {
   async function scheduleMessage(e) {
     e.preventDefault();
     let unixTimestamp = dateTimeSelected.$d.getTime();
+    console.log("input text=", inputText);
+    console.log("dateTimeSelected=", unixTimestamp);
     if (messageToUpdate) {
-      const params = {
-        scheduledAt: unixTimestamp,
-      };
-
+      let params;
+      if (unixTimestamp) {
+        console.log("unix timestamp valid!");
+        params = {
+          message: inputText,
+          scheduledAt: unixTimestamp,
+        };
+      } else {
+        params = {
+          message: inputText,
+        };
+      }
+      console.log("in messageToUpdate; params after=", params);
       await channel.updateScheduledUserMessage(
         messageToUpdate.scheduledInfo.scheduledMessageId,
         params
@@ -109,7 +120,7 @@ function CustomizedMessageInput({ appId, sb }) {
           console.log("Create scheduled message error:", err);
         });
     }
-    setmessageToUpdate(null);
+    setMessageToUpdate(null);
     setInputText("");
     setShowScheduleMessageForm(false);
   }
@@ -119,10 +130,8 @@ function CustomizedMessageInput({ appId, sb }) {
     setShowScheduleMessageList(true);
     const params = {
       channelUrl: channel.url,
-      //only want the ones where the status is still pending
-      //scheduledStatus: [ScheduledStatus.PENDING],
+      scheduledStatus: [ScheduledStatus.PENDING],
     };
-
     const scheduledMessageListQuery =
       sb.groupChannel.createScheduledMessageListQuery(params);
     const queriedScheduledMessages = await scheduledMessageListQuery.next();
@@ -131,33 +140,27 @@ function CustomizedMessageInput({ appId, sb }) {
     setScheduledMessagesList(queriedScheduledMessages);
   }
 
-  //function to update message -> on click of button, render input box? -> on submit, update msg
-  async function changeScheduledMessageText(e, selectedMessage) {
-    console.log(
-      "1. changeScheduledMessageText; scheduled message=",
-      selectedMessage
-    );
-
-    const params = {
-      message: selectedMessage.message,
-    };
-
-    // await channel.updateScheduledUserMessage(
-    //   selectedMessage.scheduledInfo.scheduledMessageId,
-    //   params
-    // );
-  }
-
-  async function changeScheduledMessageTime(e, selectedMessage) {
+  async function updateScheduledMessage(e, selectedMessage) {
     setShowScheduleMessageList(false);
     setShowScheduleMessageForm(true);
-    setmessageToUpdate(selectedMessage);
+    setMessageToUpdate(selectedMessage);
+    console.log(messageToUpdate);
+    setInputText(selectedMessage.message);
+  }
+
+  async function cancelScheduledMessage(scheduledMessage) {
+    await channel.cancelScheduledMessage(
+      scheduledMessage.scheduledInfo.scheduledMessageId
+    );
+    loadScheduledMessages();
   }
 
   return (
     <div className="customized-message-input">
       {showScheduleMessageForm && (
         <ScheduleMessageForm
+          handleChange={handleChange}
+          inputText={inputText}
           setDateTimeSelected={setDateTimeSelected}
           scheduleMessage={scheduleMessage}
           setShowScheduleMessageForm={setShowScheduleMessageForm}
@@ -166,15 +169,12 @@ function CustomizedMessageInput({ appId, sb }) {
           }}
         />
       )}
-
       {showScheduleMessageList && (
         <ScheduleMessageList
-          changeScheduledMessageText={changeScheduledMessageText}
-          changeScheduledMessageTime={changeScheduledMessageTime}
-          setShowScheduleMessageForm={setShowScheduleMessageForm}
-          //updateScheduledMessage={updateScheduledMessage}
+          updateScheduledMessage={updateScheduledMessage}
           scheduledMessagesList={scheduledMessagesList}
           setShowScheduleMessageList={setShowScheduleMessageList}
+          cancelScheduledMessage={cancelScheduledMessage}
           onClose={() => {
             setShowScheduleMessageList(false);
           }}
