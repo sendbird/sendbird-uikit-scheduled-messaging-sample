@@ -18,7 +18,7 @@ import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
 import dayjs from "dayjs";
 import { ScheduledStatus } from "@sendbird/chat/groupChannel";
 
-function CustomizedMessageInput({ appId, sb }) {
+function CustomizedMessageInput({ sb }) {
   const store = useSendbirdStateContext();
   const sendUserMessage = sendbirdSelectors.getSendUserMessage(store);
   const sendFileMessage = sendbirdSelectors.getSendFileMessage(store);
@@ -130,8 +130,9 @@ function CustomizedMessageInput({ appId, sb }) {
     const countParams = {
       scheduledStatus: [ScheduledStatus.PENDING],
     };
-    const totalScheduledMessageCount = await sb.groupChannel.getTotalScheduledMessageCount(countParams);
-    setScheduledMessagesCount(totalScheduledMessageCount)
+    const totalScheduledMessageCount =
+      await sb.groupChannel.getTotalScheduledMessageCount(countParams);
+    setScheduledMessagesCount(totalScheduledMessageCount);
   }
 
   async function updateScheduledMessage(e, selectedMessage) {

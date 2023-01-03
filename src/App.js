@@ -27,7 +27,7 @@ function App() {
         nickname={NICKNAME}
         accessToken={ACCESS_TOKEN}
       >
-        <CustomizedApp appId={APP_ID} userId={USER_ID} sb={sb}/>
+        <CustomizedApp sb={sb}/>
       </SendbirdProvider>
     </div>
   );

@@ -6,7 +6,7 @@ export default function ScheduleMessageList({
   updateScheduledMessage,
   scheduledMessagesList,
   setShowScheduleMessageList,
-  cancelScheduledMessage
+  cancelScheduledMessage,
 }) {
   return (
     <div className="bg-modal" style={{ display: "flex" }}>
@@ -17,8 +17,12 @@ export default function ScheduleMessageList({
         >
           +
         </div>
-        <h2 className="scheduled-messages-list-count">Total scheduled messages: {scheduledMessagesCount}</h2>
-        <h2 className="scheduled-messages-list-title">List of scheduled messages:</h2>
+        <h2 className="scheduled-messages-list-count">
+          Total scheduled messages: {scheduledMessagesCount}
+        </h2>
+        <h2 className="scheduled-messages-list-title">
+          List of scheduled messages:
+        </h2>
         <div className="scheduled-messages-container">
           <ul className="scheduled-messages-list">
             {scheduledMessagesList.map((scheduledMessage) => (
@@ -28,13 +32,13 @@ export default function ScheduleMessageList({
               >
                 <li id="scheduled-message">{scheduledMessage.message}</li>
                 <button
-                id="update_button"
+                  id="update_button"
                   onClick={(e) => updateScheduledMessage(e, scheduledMessage)}
                 >
                   Update
                 </button>
                 <button
-                id="cancel_button"
+                  id="cancel_button"
                   onClick={() => cancelScheduledMessage(scheduledMessage)}
                 >
                   Cancel

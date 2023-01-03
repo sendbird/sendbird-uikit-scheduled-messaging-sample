@@ -9,7 +9,7 @@ import {
 import "./index.css";
 import CustomizedMessageInput from "./CustomizedMessageInput";
 
-function CustomizedApp({userId, appId, sb}) {
+function CustomizedApp({sb}) {
   const [showSettings, setShowSettings] = useState(false);
   const [currentChannel, setCurrentChannel] = useState(null);
   const currentChannelUrl = currentChannel ? currentChannel.url : "";
@@ -44,7 +44,7 @@ function CustomizedApp({userId, appId, sb}) {
             renderSettingsBar();
           }}
           renderMessageInput={() => (
-            <CustomizedMessageInput appId={appId} sb={sb}/>
+            <CustomizedMessageInput sb={sb}/>
           )}
         />
       </div>
