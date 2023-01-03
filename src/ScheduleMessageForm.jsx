@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import "./schedule-message-form.css";
 import CalendarDatePicker from "./CalendarDatePicker";
 
@@ -7,37 +7,40 @@ export default function ScheduleMessageForm({
   inputText,
   setDateTimeSelected,
   scheduleMessage,
-  setShowScheduleMessageForm,
-  onClose,
+  setShowScheduleMessageForm
 }) {
-
-  useEffect(() => { 
-    var input = document.getElementById("message");
-    console.log("inpout=", input);
+  useEffect(() => {
+    var input = document.getElementById("message-input");
     input.value = inputText;
-    console.log("input text-", inputText);
-  },[])
+  }, []);
 
   return (
     <div className="bg-modal" style={{ display: "flex" }}>
       <div className="modal-content">
         <div
-          className="add_suggested_task_close_btn"
+          className="close_btn"
           onClick={() => setShowScheduleMessageForm(false)}
         >
           +
         </div>
-        <h3 id="suggestion-task-form-title">Schedule Message:</h3>
+        <h3 id="schedule-message-form-title">Schedule Message:</h3>
         <form
-          id="add-poll-form"
+          id="schedule-message-form"
           onSubmit={(e) => {
             scheduleMessage(e);
           }}
-        >
+        >  
+          <div className="message-input-wrapper">
+            <label htmlFor="messge" id="input-label">Message:</label>
+            <input
+              type="text"
+              id="message-input"
+              name="message"
+              onChange={handleChange}
+            />
+          </div>
           <CalendarDatePicker setDateTimeSelected={setDateTimeSelected} />
-          <label htmlFor="messge">Update message:</label>
-          <input type="text" id="message" name="message" onChange={handleChange}/>
-          <button id="add_suggested_task_save_btn">Submit</button>
+          <button id="save_btn">Submit</button>
         </form>
       </div>
     </div>

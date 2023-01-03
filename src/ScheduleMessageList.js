@@ -11,26 +11,28 @@ export default function ScheduleMessageList({
     <div className="bg-modal" style={{ display: "flex" }}>
       <div className="modal-content">
         <div
-          className="add_suggested_task_close_btn"
+          className="close_btn"
           onClick={() => setShowScheduleMessageList(false)}
         >
           +
         </div>
-        <h1>List of scheduled messages:</h1>
-        <div className="scheduled-messages-wrap">
-          <ul>
+        <h1 className="scheduled-messages-list-title">List of scheduled messages:</h1>
+        <div className="scheduled-messages-container">
+          <ul className="scheduled-messages-list">
             {scheduledMessagesList.map((scheduledMessage) => (
               <div
-                className="scheduled-message"
+                className="scheduled-message-wrapper"
                 key={scheduledMessage.scheduledInfo.scheduledMessageId}
               >
-                <li>{scheduledMessage.message}</li>
+                <li id="scheduled-message">{scheduledMessage.message}</li>
                 <button
+                id="update_button"
                   onClick={(e) => updateScheduledMessage(e, scheduledMessage)}
                 >
                   Update
                 </button>
                 <button
+                id="cancel_button"
                   onClick={() => cancelScheduledMessage(scheduledMessage)}
                 >
                   Cancel
