@@ -3,8 +3,6 @@ import {
   ChannelList,
   Channel,
   ChannelSettings,
-  sendbirdSelectors,
-  useSendbirdStateContext,
 } from "@sendbird/uikit-react/";
 import "./index.css";
 import CustomizedMessageInput from "./CustomizedMessageInput";
@@ -13,8 +11,6 @@ function CustomizedApp({sb}) {
   const [showSettings, setShowSettings] = useState(false);
   const [currentChannel, setCurrentChannel] = useState(null);
   const currentChannelUrl = currentChannel ? currentChannel.url : "";
-  const store = useSendbirdStateContext();
-  const sdk = sendbirdSelectors.getSdk(store);
   var channelChatDiv = document.getElementsByClassName("channel-chat")[0];
 
   const renderSettingsBar = () => {

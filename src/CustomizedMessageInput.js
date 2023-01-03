@@ -84,7 +84,6 @@ function CustomizedMessageInput({ sb }) {
     if (messageToUpdate) {
       let params;
       if (unixTimestamp) {
-        console.log("unix timestamp valid!");
         params = {
           message: inputText,
           scheduledAt: unixTimestamp,
@@ -139,7 +138,6 @@ function CustomizedMessageInput({ sb }) {
     setShowScheduleMessageList(false);
     setShowScheduleMessageForm(true);
     setMessageToUpdate(selectedMessage);
-    console.log(messageToUpdate);
     setInputText(selectedMessage.message);
   }
 
@@ -176,7 +174,6 @@ function CustomizedMessageInput({ sb }) {
           }}
         />
       )}
-
       <FormControl variant="outlined" disabled={disabled} fullWidth>
         <InputLabel htmlFor="customized-message-input">User Message</InputLabel>
         <OutlinedInput
