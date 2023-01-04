@@ -38,20 +38,16 @@ function CustomizedMessageInput({ sb }) {
   );
 
   const checkSendUserMessage_ = (event) => {
-    if (showScheduleMessageForm) {
-      scheduleMessage();
-    } else {
-      const params = {};
-      params.message = inputText;
-      sendUserMessage(channel, params)
-        .onSucceeded((message) => {
-          console.log(message);
-          setInputText("");
-        })
-        .onFailed((error) => {
-          console.log(error.message);
-        });
-    }
+    const params = {};
+    params.message = inputText;
+    sendUserMessage(channel, params)
+      .onSucceeded((message) => {
+        console.log(message);
+        setInputText("");
+      })
+      .onFailed((error) => {
+        console.log(error.message);
+      });
   };
 
   const handleChange = (event) => {
