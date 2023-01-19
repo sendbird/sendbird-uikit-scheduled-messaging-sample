@@ -6,6 +6,7 @@ import {
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
+import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
@@ -14,7 +15,6 @@ import sendbirdSelectors from "@sendbird/uikit-react/sendbirdSelectors";
 import { useChannelContext } from "@sendbird/uikit-react/Channel/context";
 import ScheduleMessageForm from "./ScheduleMessageForm";
 import ScheduleMessageList from "./ScheduleMessageList";
-import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
 import dayjs from "dayjs";
 import { ScheduledStatus } from "@sendbird/chat/groupChannel";
 
@@ -42,7 +42,6 @@ function CustomizedMessageInput({ sb }) {
     params.message = inputText;
     sendUserMessage(channel, params)
       .onSucceeded((message) => {
-        console.log(message);
         setInputText("");
       })
       .onFailed((error) => {
@@ -56,7 +55,6 @@ function CustomizedMessageInput({ sb }) {
 
   const sendFileMessage_ = (event) => {
     if (event.target.files && event.target.files[0]) {
-      console.log(event.target.files[0]);
       if (event.target.files[0].size > 1 * 1000 * 1000) {
         alert("Image size greater than 1 MB");
         return;
@@ -153,21 +151,15 @@ function CustomizedMessageInput({ sb }) {
           setDateTimeSelected={setDateTimeSelected}
           scheduleMessage={scheduleMessage}
           setShowScheduleMessageForm={setShowScheduleMessageForm}
-          onClose={() => {
-            setShowScheduleMessageForm(false);
-          }}
         />
       )}
       {showScheduleMessageList && (
         <ScheduleMessageList
           scheduledMessagesCount={scheduledMessagesCount}
-          updateScheduledMessage={updateScheduledMessage}
+          updateScheduledMessage={updateScheduledMessage} 
           scheduledMessagesList={scheduledMessagesList}
           setShowScheduleMessageList={setShowScheduleMessageList}
           cancelScheduledMessage={cancelScheduledMessage}
-          onClose={() => {
-            setShowScheduleMessageList(false);
-          }}
         />
       )}
       <FormControl variant="outlined" disabled={disabled} fullWidth>

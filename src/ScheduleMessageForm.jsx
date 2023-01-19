@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import "./schedule-message-form.css";
 import CalendarDatePicker from "./CalendarDatePicker";
+import "./schedule-message-form.css";
 
 export default function ScheduleMessageForm({
   handleChange,
@@ -12,7 +12,7 @@ export default function ScheduleMessageForm({
   useEffect(() => {
     var input = document.getElementById("message-input");
     input.value = inputText;
-  }, []);
+  }, [inputText]);
 
   return (
     <div className="bg-modal" style={{ display: "flex" }}>
@@ -31,7 +31,7 @@ export default function ScheduleMessageForm({
           }}
         >  
           <div className="message-input-wrapper">
-            <label htmlFor="messge" id="input-label">Message:</label>
+            <label htmlFor="message" id="input-label">Message:</label>
             <input
               type="text"
               id="message-input"

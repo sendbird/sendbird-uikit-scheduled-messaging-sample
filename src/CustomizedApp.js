@@ -4,7 +4,6 @@ import {
   Channel,
   ChannelSettings,
 } from "@sendbird/uikit-react/";
-import "./index.css";
 import CustomizedMessageInput from "./CustomizedMessageInput";
 
 function CustomizedApp({sb}) {
@@ -16,7 +15,7 @@ function CustomizedApp({sb}) {
   const renderSettingsBar = () => {
     channelChatDiv.style.width = "52%";
     channelChatDiv.style.cssFloat = "left";
-  };
+  }; 
 
   const hideSettingsBar = () => {
     channelChatDiv.style.width = "76%";
