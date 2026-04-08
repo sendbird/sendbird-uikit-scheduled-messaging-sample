@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import CalendarDatePicker from "./CalendarDatePicker";
+import CalendarDatePicker from "./CalendarDatePicker.jsx";
 import "./schedule-message-form.css";
 
 export default function ScheduleMessageForm({

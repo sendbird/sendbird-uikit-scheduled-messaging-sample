@@ -13,8 +13,8 @@ import SendIcon from "@mui/icons-material/Send";
 import useSendbirdStateContext from "@sendbird/uikit-react/useSendbirdStateContext";
 import sendbirdSelectors from "@sendbird/uikit-react/sendbirdSelectors";
 import { useChannelContext } from "@sendbird/uikit-react/Channel/context";
-import ScheduleMessageForm from "./ScheduleMessageForm";
-import ScheduleMessageList from "./ScheduleMessageList";
+import ScheduleMessageForm from "./ScheduleMessageForm.jsx";
+import ScheduleMessageList from "./ScheduleMessageList.jsx";
 import dayjs from "dayjs";
 import { ScheduledStatus } from "@sendbird/chat/groupChannel";
 
