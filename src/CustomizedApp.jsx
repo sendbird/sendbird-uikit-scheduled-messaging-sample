@@ -3,8 +3,8 @@ import {
   ChannelList,
   Channel,
   ChannelSettings,
-} from "@sendbird/uikit-react/";
-import CustomizedMessageInput from "./CustomizedMessageInput";
+} from "@sendbird/uikit-react";
+import CustomizedMessageInput from "./CustomizedMessageInput.jsx";
 
 function CustomizedApp({sb}) {
   const [showSettings, setShowSettings] = useState(false);
