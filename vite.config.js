@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 const logger = createLogger()
 const originalWarn = logger.warn.bind(logger)
 logger.warn = (msg, options) => {
-  if (msg.includes('@import must precede')) return
+  if (/@import (statements )?must precede/.test(msg)) return
   originalWarn(msg, options)
 }
 
